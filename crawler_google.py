@@ -8,6 +8,7 @@ import urllib.request
 import os 
 
 keyword = input("검색어 입력: ")
+folder = input("PATH 입력:")
 color = input("""색상 입력 - (red, orange, yellow, green, mint, etc...)
                """)
 scroll = int(input("스크롤 횟수(1~10):"))
@@ -27,9 +28,19 @@ for img in images:
     if int(img.get_attribute('height')) >= 50 and img.get_attribute('src') not in img_checked:
         img_checked.append(img.get_attribute('src'))
 
-path = f"images/{keyword}"
+path = f"images/{folder}"
 if not os.path.isdir(path) :
     os.mkdir(path)
 
+start = list(map(lambda x: int(x.split('.')[0]), os.listdir(path)))
+start.sort()
+print(start)
+start = start[-1]
+
 for index, link in enumerate(img_checked):
-    urllib.request.urlretrieve(link, f'{path}/{index}.jpg')
+    try: 
+        urllib.request.urlretrieve(link, f'{path}/{index}.jpg')
+        print(f'{path}/{start + index + 1}.jpg DONE')
+        time.sleep(1)
+    except:
+        print(f'{path}/{start + index + 1}.jpg FAIL')
