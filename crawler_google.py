@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 import urllib.request
-import os 
+import os
 
 keyword = input("검색어 입력: ")
 folder = input("PATH 입력:")
@@ -32,10 +32,11 @@ if not os.path.isdir(path) :
 start = list(map(lambda x: int(x.split('.')[0]), os.listdir(path)))
 start.sort()
 print(start)
-start = start[-1]
+start = start[-1] if len(start) != 0 else 0
 
-for index, link in enumerate(img_checked):
+for index, link in enumerate(img_checked[:-3]):
     try: 
+        time.sleep(0.5)
         urllib.request.urlretrieve(link, f'{path}/{start + index + 1}.jpg')
         print(f'{path}/{start + index + 1}.jpg DONE')
     except:
