@@ -6,9 +6,11 @@ import numpy as np
 
 with open('models/label_encoder.pkl', 'rb') as file:
     label_encoder = pickle.load(file)
+with open('models/width_height.pkl', 'rb') as file:
+    image_width, image_height = pickle.load(file)
 model = tf.keras.models.load_model('models/my_model.keras')
 
-test = pd.read_csv("data/train.csv")
+test = pd.read_csv("data/modi_train.csv")
 
 result = {
     "path": [],
@@ -29,7 +31,7 @@ top3_correct_predictions = {}
 for i in range(len(test)):
     img_path = test.iloc[i]["path"]
 
-    img = image.load_img(img_path, target_size=(182,192))
+    img = image.load_img(img_path, target_size=(image_width, image_height))
     img_array = image.img_to_array(img)
     img_array = img_array / 255.0
     img_array = np.expand_dims(img_array, axis=0)

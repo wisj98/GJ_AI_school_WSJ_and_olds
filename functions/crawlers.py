@@ -43,7 +43,7 @@ def google_crawler():
         except:
             print(f'{path}/{start + index + 1}.jpg FAIL')
 
-def knowyourmeme():
+def knowyourmeme_crawler():
     keyword = input("검색어 입력: ")
     folder = f"images\\{input("PATH 입력:")}"
     scroll = int(input("스크롤 횟수(횟수 당 10~20장):"))
