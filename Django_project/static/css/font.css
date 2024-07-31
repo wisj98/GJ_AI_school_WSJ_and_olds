@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'GmarketSansM';
+    src: url('/static/fonts/GmarketSansM.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'GmarketSansM', sans-serif;
+}

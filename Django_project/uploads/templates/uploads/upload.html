@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이미지 업로드- M4M</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/upload.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'home' %}">M4M</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link btn btn-board" href="{% url 'board' %}">게시판</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <span class="nav-link text-dark">안녕하세요 {{ user.nickname }} 님</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-log" href="{% url 'logout' %}">로그아웃</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link btn btn-log" href="{% url 'login' %}">로그인</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-signup" href="{% url 'signup' %}">회원가입</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<div class="main-container">
+    <div class="upload-container" id="upload-container">
+        <h1 class="upload-title">이미지 업로드</h1>
+        <div class="image-preview-container" id="image-preview-container">
+            <div class="overlay" id="overlay"></div>
+            <div class="card" id="card"></div>
+        </div>
+        <form id="upload-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="imageFile" name="image" accept="image/*">
+                    <label class="custom-file-label" for="imageFile">선택한 파일 없음</label>
+                </div>
+                <button type="button" class="btn btn-primary" id="uploadButton" style="display:none;">업로드</button>
+            </div>
+        </form>
+    </div>
+    <div class="preview-container" id="preview-container" style="opacity:0;">
+        <h1 class="download-title">예측 결과</h1>
+        <p id="prediction-result"></p>
+        <div id="predicted-images-container">
+            <img id="predicted-image-1" src="" alt="Predicted Image 1" style="max-width: 300px; display: none;"/>
+            <img id="predicted-image-2" src="" alt="Predicted Image 2" style="max-width: 300px; display: none;"/>
+            <img id="predicted-image-3" src="" alt="Predicted Image 3" style="max-width: 300px; display: none;"/>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function setupImagePreview(containerId, fileInputId, cardId, overlayId) {
+            var fileInput = document.querySelector(`#${fileInputId}`);
+            if (fileInput) {
+                fileInput.addEventListener('change', function (e) {
+                    var fileName = fileInput.files[0].name;
+                    var nextSibling = e.target.nextElementSibling;
+                    nextSibling.innerText = fileName;
+
+                    var file = e.target.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var img = new Image();
+                        img.onload = function() {
+                            var card = document.getElementById(cardId);
+                            var overlay = document.getElementById(overlayId);
+
+                            var maxWidth = 1000;
+                            var maxHeight = 1200;
+                            var width = img.width;
+                            var height = img.height;
+
+                            if (width > maxWidth) {
+                                height *= maxWidth / width;
+                                width = maxWidth;
+                            }
+
+                            if (height > maxHeight) {
+                                width *= maxHeight / height;
+                                height = maxHeight;
+                            }
+
+                            card.style.width = width + 'px';
+                            card.style.height = height + 'px';
+                            card.style.backgroundImage = `url(${e.target.result})`;
+
+                            overlay.style.width = width + 'px';
+                            overlay.style.height = height + 'px';
+                        }
+                        img.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+
+                    var uploadButton = document.getElementById('uploadButton');
+                    uploadButton.style.display = 'block';
+                });
+
+                var container = document.querySelector(`#${containerId}`);
+                var overlay = document.querySelector(`#${overlayId}`);
+                container.addEventListener('mousemove', function(e) {
+                    var x = e.offsetX;
+                    var y = e.offsetY;
+                    var width = container.offsetWidth;
+                    var height = container.offsetHeight;
+
+                    var maxRotate = 5;
+                    var rotateY = (x - width / 2) / (width / 3) * maxRotate; 
+                    var rotateX = -(y - height / 2) / (height / 3) * maxRotate; 
+
+                    rotateY = Math.max(Math.min(rotateY, maxRotate), -maxRotate);
+                    rotateX = Math.max(Math.min(rotateX, maxRotate), -maxRotate);
+
+                    overlay.style.backgroundPosition = `${x / width * 100}% ${y / height * 100}%`;
+                    overlay.style.filter = `opacity(${x / width}) brightness(1.2)`;
+
+                    container.style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+
+                container.addEventListener('mouseout', function() {
+                    overlay.style.filter = 'opacity(0)';
+                    container.style.transform = 'perspective(350px) rotateY(0deg) rotateX(0deg)';
+                });
+            } else {
+                console.error(`Element with ID ${fileInputId} not found.`);
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        function setupUploadButton(buttonId) {
+            document.getElementById(buttonId).addEventListener('click', function() {
+                var formData = new FormData(document.getElementById('upload-form'));
+                fetch('{% url "upload" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    var uploadContainer = document.getElementById('upload-container');
+                    var previewContainer = document.getElementById('preview-container');
+                    var predictionResult = document.getElementById('prediction-result');
+                    var predictedImagesContainer = document.getElementById('predicted-images-container');
+
+                    uploadContainer.classList.add('move-left');
+                    previewContainer.classList.add('move-right');
+                    previewContainer.style.opacity = 1;
+
+                    if (data.top_3_classes && data.top_3_images) {
+                        predictionResult.innerText = `Top 3 Predictions: ${data.top_3_classes.join(', ')}`;
+                        for (let i = 0; i < 3; i++) {
+                            const imgElement = document.getElementById(`predicted-image-${i + 1}`);
+        
+                            if (data.top_3_images[i]) {
+                            // URL을 디코딩합니다.
+                            const decodedUrl = decodeURIComponent(data.top_3_images[i]);
+                                            
+                            // 이미지 요소의 src 속성을 업데이트합니다.
+                            imgElement.src = decodedUrl;
+                                            
+                            // 이미지를 표시합니다.
+                            imgElement.style.display = 'block';
+                            } else {
+                                // 이미지가 없을 경우 해당 요소를 숨깁니다.
+                                imgElement.style.display = 'none';
+                            }
+                        }
+                    } else {
+                        console.error('Upload failed:', data.error);
+                    }
+
+                }).catch(error => {
+                    var uploadContainer = document.getElementById('upload-container');
+                    var previewContainer = document.getElementById('preview-container');
+                    var predictionResult = document.getElementById('prediction-result');
+
+                    uploadContainer.classList.add('move-left');
+                    previewContainer.classList.add('move-right');
+                    previewContainer.style.opacity = 1;
+
+                    predictionResult.innerText = '서버와의 연결에 실패했습니다. 다시 시도해 주세요.';
+                    console.error('Error:', error);
+                });
+            });
+        }
+
+        setupImagePreview('image-preview-container', 'imageFile', 'card', 'overlay');
+        setupUploadButton('uploadButton');
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    background-color: #f8f9fa; /* 배경 색상 추가 */
+}
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    scroll-snap-align: start;
+}
+.logo {
+    font-size: 18em;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo span {
+    display: inline-block;
+    opacity: 0;
+}
+.logo .m1 {
+    animation: slideInLeft 1.5s forwards;
+}
+.logo .four {
+    animation: slideInTop 1.5s forwards;
+}
+.logo .m2 {
+    animation: slideInBottom 1.5s forwards;
+}
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-300%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes slideInTop {
+    0% {
+        transform: translateY(-300%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes slideInBottom {
+    0% {
+        transform: translateY(300%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.intro {
+    font-size: 1.5em;
+    text-align: center;
+    padding: 20px;
+}

@@ -1,0 +1,264 @@
+/* 게시판 */
+body.board, html.board {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.board-title {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 4em;
+    margin-top: 100px;
+}
+.board-container {
+    flex: 1;
+    padding-top: 70px;
+    width: 80%; /* 고정 너비 설정 */
+    margin: 0 auto;
+    background-color: transparent !important;
+    padding: 20px;
+}
+.board-table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+.board-th, .board-td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: center; /* 가로 정렬 */
+    vertical-align: middle; /* 세로 정렬 */
+}
+.board-th {
+    background-color: #f8f9fa;
+}
+.board-th:nth-child(1) {
+    width: 10%;
+}
+.board-th:nth-child(2) {
+    width: 50%;
+}
+.board-th:nth-child(3) {
+    width: 20%;
+}
+.board-th:nth-child(4) {
+    width: 20%;
+}
+.board-btn-create-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+.board-search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.board-search-box {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 600px; /* 최대 너비 설정 */
+    padding: 20px;
+}
+.board-search-container input[type="text"] {
+    border: none;
+    font-size: 20px;
+    flex: 1;
+    margin-top: -4px;
+}
+.board-search-container button {
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.board-search-container button i {
+    font-size: 1.2em;
+}
+.board-btn-create {
+    margin-bottom: 20px;
+    margin-right: 100px;
+    font-size: 1.5em;
+}
+.board-pagination {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    list-style: none;
+}
+.board-pagination li {
+    display: inline;
+    margin: 0 5px;
+}
+.board-pagination a, .board-pagination span {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: transparent;
+    border: none;
+}
+.board-pagination .current, .board-pagination .active .board-page-link {
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+}
+.board-pagination .disabled {
+    color: #6c757d;
+    pointer-events: none;
+}
+
+/* 게시글 작성 */
+.create-post-body,
+.create-post-html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f9fa;
+}
+.create-post-container {
+    text-align: center;
+    margin-top: 150px; /* 네비게이션 바와의 간격을 위한 마진 */
+}
+.create-post-logo {
+    font-size: 10em;
+    margin-bottom: 20px;
+}
+.create-post-form-label, 
+.create-post-form-control, 
+.create-post-form-text {
+    font-size: 1.5em; /* 폰트 크기를 조절 */
+}
+.create-post-form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2em; /* 폼 요소 간의 간격 조절 */
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.create-post-form-label {
+    margin-bottom: 0.5em; /* 레이블과 입력칸 간의 간격 조절 */
+    text-align: left;
+}
+.create-post-form-control {
+    width: 50em; /* 입력칸의 너비 조절 */
+    background-color: #ffffff; /* 배경 색상 */
+    border: 1px solid #ced4da; /* 테두리 설정 */
+    color: #495057; /* 텍스트 색상 */
+    padding: 10px; /* 패딩 설정 */
+    font-size: 1.5em; /* 폰트 크기 */
+    border-radius: 5px; /* 모서리 둥글게 */
+}
+#create-post-content {
+    height: 30em;
+}
+.create-post-btn-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 2em;
+}
+.create-post-btn-primary,
+.create-post-btn-secondary {
+    border: none; /* 테두리 제거 */
+    font-size: 1.5em; /* 버튼의 폰트 크기 조절 */
+    padding: 5px 5px; /* 버튼의 패딩 조절 */
+    color: white
+}
+.create-post-btn-primary {
+    background-color: #6c757d; /* 회색 배경 */
+}
+.create-post-btn-secondary {
+    background-color: #dc3545; /* 빨간색 배경 */
+}
+
+.edit-container {
+    margin-top: 100px;
+}
+
+/* 게시글 상세 */
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 200px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd; /* 제목 박스 테두리 */
+    padding: 20px;
+    border-radius: 10px;
+}
+.post-meta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px; /* 작성자와 작성일 간격 */
+}
+.post-title {
+    font-size: 4rem;
+}
+.post-content {
+    font-size: 2.5rem;
+    border: 2px solid #ddd; /* 내용 박스 테두리 */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.btn-toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* 댓글 */
+.comment-form {
+    margin-top: 50px;
+    display: flex;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    overflow: hidden; /* 내용이 넘치지 않도록 설정 */
+    align-items: center; /* 아이템들을 수직 중앙에 정렬 */
+}
+
+.comment-form form {
+    display: flex; /* form 내부도 flex로 설정 */
+    width: 100%; /* form의 너비를 100%로 설정 */
+    margin: 0; /* form의 여백 제거 */
+}
+
+.comment-textarea {
+    flex: 1; /* 남은 공간을 차지하도록 설정 */
+    height: 40px; /* 높이를 동일하게 설정 */
+    resize: none; /* 크기 조절 핸들 제거 */
+    border: none;
+    outline: none;
+    padding: 10px; /* 텍스트 입력 공간의 내부 패딩 */
+    box-sizing: border-box; /* 패딩 포함하여 크기 조정 */
+    margin: 0; /* 여백 제거 */
+    font-size: 16px;
+}
+
+.comment-button {
+    height: 40px; /* 버튼 높이를 동일하게 설정 */
+    padding: 0 20px; /* 버튼의 좌우 패딩 조정 */
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 버튼 텍스트 색 */
+    border: none; /* 버튼 테두리 제거 */
+    border-radius: 0; /* 버튼 모서리 둥글게 제거 */
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px; /* 버튼과 텍스트 입력창 사이의 간격 */
+}
